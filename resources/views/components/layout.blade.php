@@ -36,7 +36,7 @@
     </div>
   </header>
 
-  <main class="mt-10">
+  <main class="mt-10 mx-auto max-w-[986px]">
     {{ $slot }}
   </main>
 </div>
