@@ -1,18 +1,18 @@
-<div class="p-4 bg-white/5 rounded-xl flex flex-col text-center">
+<x-panel class="flex flex-col text-center">
   <div class="self-start text-sm">Suptitle</div>
 
-  <div class="py-8 font-bold">
-    <h3>Title</h3>
-    <p>Description</p>
+  <div class="py-8">
+    <h3 class="font-bold text-xl group-hover:text-blue-800 transition-colors duration-300">Title</h3>
+    <p class="text-sm mt-4">Description</p>
   </div>
 
   <div class="flex justify-between items-center mt-auto">
-    <div>
+    <div class="flex gap-2">
       <x-tag>Tag</x-tag>
       <x-tag>Tag</x-tag>
       <x-tag>Tag</x-tag>
     </div>
 
-    <img src="https://placehold.it/42/42" class="rounded-xl" alt="">
+    <x-employer-logo width="42"/>
   </div>
-</div>
+</x-panel>
