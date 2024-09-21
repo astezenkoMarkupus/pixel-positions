@@ -32,8 +32,14 @@
     </nav>
 
     @auth
-      <div class="post-a-job">
+      <div class="post-a-job flex">
         <a href="/jobs/create">Post a Job</a>
+
+        <form action="/logout" method="POST" class="ml-10">
+          @csrf
+          @method('DELETE')
+          <button>Log Out</button>
+        </form>
       </div>
     @endauth
 
