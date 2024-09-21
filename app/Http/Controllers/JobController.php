@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
-use App\Http\Requests\StoreJobRequest;
-use App\Http\Requests\UpdateJobRequest;
 use App\Models\Tag;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 class JobController extends Controller
 {
@@ -17,11 +19,11 @@ class JobController extends Controller
      */
     public function index(): View|Factory|Application
     {
-        $jobs = Job::all()->groupBy('featured');
+        $jobs = Job::latest()->get()->groupBy('featured');
 
         return view('jobs.index', [
-            'featuredJobs' => $jobs[0],
-            'jobs'         => $jobs[1],
+            'jobs'         => $jobs[0],
+            'featuredJobs' => $jobs[1],
             'tags'         => Tag::all(),
         ]);
     }
@@ -29,48 +31,35 @@ class JobController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View|Factory|Application
     {
-        //
+        return view('jobs.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreJobRequest $request)
+    public function store(): Application|Redirector|RedirectResponse
     {
-        //
-    }
+        $atts = request()->validate([
+            'title'    => 'required',
+            'salary'   => 'required',
+            'location' => 'required',
+            'schedule' => ['required', Rule::in(['Part Time', 'Full Time'])],
+            'url'      => 'required|active_url',
+            'tags'     => 'nullable',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Job $job)
-    {
-        //
-    }
+        $atts['featured'] = request()->has('featured');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Job $job)
-    {
-        //
-    }
+        $job = auth()->user()->employer->jobs()->create(Arr::except($atts, 'tags'));
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateJobRequest $request, Job $job)
-    {
-        //
-    }
+        if ( ! empty($atts['tags'])) {
+            foreach (explode(',', $atts['tags']) as $tag) {
+                $job->tag($tag);
+            }
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Job $job)
-    {
-        //
+        return redirect('/');
     }
 }

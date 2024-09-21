@@ -6,7 +6,7 @@
   <title>Pixel Positions</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-black text-white">
+<body class="bg-black text-white pb-10">
 
 <div class="px-10">
   <header class="flex justify-between items-center py-4 border-b border-white/10">
@@ -31,9 +31,22 @@
       </ul>
     </nav>
 
-    <div class="post-a-job">
-      <a href="#">Post a Job</a>
-    </div>
+    @auth
+      <div class="post-a-job">
+        <a href="/jobs/create">Post a Job</a>
+      </div>
+    @endauth
+
+    @guest
+      <ul class="flex space-x-6 font-bold">
+        <li class="menu-item">
+          <a href="/register">Sign Up</a>
+        </li>
+        <li class="menu-item">
+          <a href="/login">Log In</a>
+        </li>
+      </ul>
+    @endguest
   </header>
 
   <main class="mt-10 mx-auto max-w-[986px]">
